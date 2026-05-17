@@ -1,66 +1,56 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { supabase } from '@/lib/supabase';
+import HeroCarousel from '@/components/HeroCarousel';
+import ProductCard from '@/components/ProductCard';
 
-export default function Home() {
+// Next.js feature to refetch data every hour (ISR)
+export const revalidate = 3600; 
+
+export default async function Home() {
+  // Fetch our products from the Supabase database we just created
+  const { data: products, error } = await supabase
+    .from('products')
+    .select('*')
+    .limit(4); // Just get 4 for the homepage
+
+  if (error) console.error("Error fetching products:", error);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex flex-col w-full animate-fade-in">
+      
+      {/* 1. Hero Section */}
+      <HeroCarousel />
+
+      {/* 2. Shop By Department (Static Grid) */}
+      <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto w-full text-center">
+        <h2 className="font-serif text-2xl md:text-3xl mb-8 text-primary">Shop by Department</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {['ABAYAS', 'JALABIAS', 'SHOES', 'BAGS'].map((dept) => (
+            <div key={dept} className="bg-white py-10 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex items-center justify-center">
+              <span className="font-sans text-xs tracking-[0.2em] text-primary">{dept}</span>
+            </div>
+          ))}
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* 3. Selected For You (Dynamic Database Grid) */}
+      <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto w-full bg-cream">
+        <div className="flex justify-between items-end mb-8">
+          <div className="text-left">
+            <h2 className="font-serif text-2xl md:text-3xl text-primary">Selected for You</h2>
+            <p className="font-sans text-xs text-secondary mt-2">Our most loved pieces this season</p>
+          </div>
+          <span className="font-sans text-xs font-semibold tracking-widest text-primary cursor-pointer hover:text-accent">
+            VIEW ALL →
+          </span>
         </div>
-      </main>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10">
+          {products?.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
+
     </div>
   );
 }
