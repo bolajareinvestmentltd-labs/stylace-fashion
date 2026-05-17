@@ -8,7 +8,8 @@ export default function CartDrawer() {
 
   // THE WHATSAPP CHECKOUT ENGINE
   const handleWhatsAppCheckout = () => {
-    const ceoPhone = "2348000000000"; // TODO: Put Lola's actual number here
+    // Lola's official WhatsApp number (no spaces or + signs)
+    const ceoPhone = "2349036831683"; 
     
     let message = `Hello Lola! Is this available? I would like to order:\n\n`;
     cart.forEach(item => {
@@ -16,6 +17,7 @@ export default function CartDrawer() {
     });
     message += `\n*Total: ₦${cartTotal.toLocaleString()}*`;
 
+    // Encode the text so URLs don't break, then open WhatsApp!
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/${ceoPhone}?text=${encodedMessage}`, '_blank');
   };
