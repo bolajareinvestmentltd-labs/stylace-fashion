@@ -21,9 +21,9 @@ export default function ProductCard({ product }) {
         />
       </div>
       
-      <div className="text-center">
-        <h3 className="font-serif text-lg text-primary">{product.name}</h3>
-        <p className="font-sans text-sm text-secondary mt-1">₦{product.price.toLocaleString()}</p>
+     <div className="text-center mt-3">
+        <h3 className="font-serif text-base text-primary">{product.name}</h3>
+        <p className="font-sans text-xs text-secondary mt-1">₦{product.price.toLocaleString()}</p>
       </div>
     </Link>
   );

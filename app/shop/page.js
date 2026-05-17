@@ -39,7 +39,7 @@ export default async function Shop() {
             <span className="cursor-pointer flex items-center">Sort By <span className="ml-1 text-[8px]">▼</span></span>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12">
             {products?.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
